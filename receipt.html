@@ -9,58 +9,311 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 520px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .header h2 {
+            margin-top: 8px;
+            font-size: 18px;
+            font-weight: normal;
+        }
+
+        .loading {
+            text-align: center;
             padding: 30px;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .label {
+            color: #666;
+        }
+
+        .value {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .total {
+            margin-top: 20px;
+            padding: 18px;
+            background: #f1f1f1;
+            border-radius: 10px;
             text-align: center;
         }
 
-        .box {
-            max-width: 500px;
-            margin: auto;
-            padding: 25px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
+        .total-label {
+            font-size: 14px;
+            color: #666;
         }
 
-        .token {
-            margin-top: 20px;
-            padding: 12px;
-            background: #f5f5f5;
-            border-radius: 8px;
-            word-break: break-all;
+        .total-value {
+            font-size: 26px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .error {
+            text-align: center;
+            color: #b00020;
+            padding: 25px;
         }
     </style>
 </head>
 
 <body>
 
-<div class="box">
+<div class="container">
 
-    <h1>WELLGROW</h1>
-
-    <h2>TANDA TERIMA GAJI</h2>
-
-    <p>Token transaksi:</p>
-
-    <div class="token" id="token">
-        Membaca token...
+    <div class="header">
+        <h1>WELLGROW</h1>
+        <h2>TANDA TERIMA GAJI</h2>
     </div>
+
+    <div id="loading" class="loading">
+        Memuat data gaji...
+    </div>
+
+    <div id="data" style="display:none;">
+
+        <div class="data-row">
+            <span class="label">Nama</span>
+            <span class="value" id="nama"></span>
+        </div>
+
+        <div class="data-row">
+            <span class="label">NIK</span>
+            <span class="value" id="nik"></span>
+        </div>
+
+        <div class="data-row">
+            <span class="label">Jabatan</span>
+            <span class="value" id="jabatan"></span>
+        </div>
+
+        <div class="data-row">
+            <span class="label">Periode</span>
+            <span class="value" id="periode"></span>
+        </div>
+
+        <br>
+
+        <div class="data-row">
+            <span class="label">Gaji Pokok</span>
+            <span class="value" id="gajiPokok"></span>
+        </div>
+
+        <div class="data-row">
+            <span class="label">Tunjangan</span>
+            <span class="value" id="tunjangan"></span>
+        </div>
+
+        <div class="data-row">
+            <span class="label">Lembur</span>
+            <span class="value" id="lembur"></span>
+        </div>
+
+        <div class="data-row">
+            <span class="label">Bonus</span>
+            <span class="value" id="bonus"></span>
+        </div>
+
+        <div class="data-row">
+            <span class="label">Potongan</span>
+            <span class="value" id="potongan"></span>
+        </div>
+
+        <div class="total">
+            <div class="total-label">TOTAL DITERIMA</div>
+            <div class="total-value" id="totalDiterima"></div>
+        </div>
+
+    </div>
+
+    <div id="error" class="error" style="display:none;"></div>
 
 </div>
 
 <script>
 
+    // ==========================================
+    // URL GOOGLE APPS SCRIPT
+    // ==========================================
+
+    const API_URL =
+        "https://script.google.com/macros/s/AKfycbxLgwrJ0BJ8KZJzzARkbL7FhIW_LsDQorI5Mbf02_ItydIhRgz6B_EopDA7ffflv77-/exec";
+
+
+    // ==========================================
+    // AMBIL TOKEN DARI URL
+    // ==========================================
+
     const params = new URLSearchParams(window.location.search);
 
     const token = params.get("id");
 
-    if (token) {
 
-        document.getElementById("token").textContent = token;
+    // ==========================================
+    // FORMAT RUPIAH
+    // ==========================================
+
+    function formatRupiah(angka) {
+
+        return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            maximumFractionDigits: 0
+        }).format(angka);
+
+    }
+
+
+    // ==========================================
+    // FORMAT PERIODE
+    // ==========================================
+
+    function formatPeriode(tanggal) {
+
+        const date = new Date(tanggal);
+
+        return new Intl.DateTimeFormat("id-ID", {
+            month: "long",
+            year: "numeric",
+            timeZone: "Asia/Jakarta"
+        }).format(date);
+
+    }
+
+
+    // ==========================================
+    // VALIDASI TOKEN
+    // ==========================================
+
+    if (!token) {
+
+        document.getElementById("loading").style.display = "none";
+
+        document.getElementById("error").style.display = "block";
+
+        document.getElementById("error").innerText =
+            "Token tanda terima tidak ditemukan.";
 
     } else {
 
-        document.getElementById("token").textContent =
-            "Token tidak ditemukan.";
+        // ==========================================
+        // AMBIL DATA DARI APPS SCRIPT
+        // ==========================================
+
+        fetch(API_URL + "?id=" + encodeURIComponent(token))
+
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error("Gagal menghubungi server.");
+                }
+
+                return response.json();
+
+            })
+
+            .then(result => {
+
+                if (!result.success) {
+
+                    throw new Error(
+                        result.message || "Data tidak ditemukan."
+                    );
+
+                }
+
+                const data = result.data;
+
+
+                // ==========================================
+                // TAMPILKAN DATA
+                // ==========================================
+
+                document.getElementById("nama").innerText =
+                    data.nama;
+
+                document.getElementById("nik").innerText =
+                    data.nik;
+
+                document.getElementById("jabatan").innerText =
+                    data.jabatan;
+
+                document.getElementById("periode").innerText =
+                    formatPeriode(data.periode);
+
+                document.getElementById("gajiPokok").innerText =
+                    formatRupiah(data.gajiPokok);
+
+                document.getElementById("tunjangan").innerText =
+                    formatRupiah(data.tunjangan);
+
+                document.getElementById("lembur").innerText =
+                    formatRupiah(data.lembur);
+
+                document.getElementById("bonus").innerText =
+                    formatRupiah(data.bonus);
+
+                document.getElementById("potongan").innerText =
+                    formatRupiah(data.potongan);
+
+                document.getElementById("totalDiterima").innerText =
+                    formatRupiah(data.totalDiterima);
+
+
+                // ==========================================
+                // TAMPILKAN AREA DATA
+                // ==========================================
+
+                document.getElementById("loading").style.display =
+                    "none";
+
+                document.getElementById("data").style.display =
+                    "block";
+
+            })
+
+            .catch(error => {
+
+                document.getElementById("loading").style.display =
+                    "none";
+
+                document.getElementById("error").style.display =
+                    "block";
+
+                document.getElementById("error").innerText =
+                    error.message;
+
+            });
 
     }
 
