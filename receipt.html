@@ -3,15 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Tanda Terima Gaji - Wellgrow</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .box {
+            max-width: 500px;
+            margin: auto;
+            padding: 25px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+        }
+
+        .token {
+            margin-top: 20px;
+            padding: 12px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            word-break: break-all;
+        }
+    </style>
 </head>
 
 <body>
 
+<div class="box">
+
     <h1>WELLGROW</h1>
+
     <h2>TANDA TERIMA GAJI</h2>
 
-    <p>Halaman tanda terima gaji Wellgrow.</p>
+    <p>Token transaksi:</p>
+
+    <div class="token" id="token">
+        Membaca token...
+    </div>
+
+</div>
+
+<script>
+
+    const params = new URLSearchParams(window.location.search);
+
+    const token = params.get("id");
+
+    if (token) {
+
+        document.getElementById("token").textContent = token;
+
+    } else {
+
+        document.getElementById("token").textContent =
+            "Token tidak ditemukan.";
+
+    }
+
+</script>
 
 </body>
 </html>
