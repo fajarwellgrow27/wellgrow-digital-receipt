@@ -1,162 +1,156 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Tanda Terima Gaji - Wellgrow</title>
+<title>Tanda Terima Gaji - Wellgrow</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            margin: 0;
-            padding: 20px;
-        }
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    margin: 0;
+    padding: 20px;
+}
 
-        .container {
-            max-width: 520px;
-            margin: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
-        }
+.container {
+    max-width: 520px;
+    margin: auto;
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 3px 15px rgba(0,0,0,.08);
+}
 
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+}
 
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+}
 
-        .header h2 {
-            margin-top: 8px;
-            font-size: 18px;
-            font-weight: normal;
-        }
+.header h2 {
+    margin-top: 8px;
+    font-size: 18px;
+    font-weight: normal;
+}
 
-        .loading {
-            text-align: center;
-            padding: 30px;
-        }
+.loading {
+    text-align: center;
+    padding: 30px;
+}
 
-        .data-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
+.data-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
 
-        .label {
-            color: #666;
-        }
+.label {
+    color: #666;
+}
 
-        .value {
-            font-weight: bold;
-            text-align: right;
-        }
+.value {
+    font-weight: bold;
+    text-align: right;
+}
 
-        .total {
-            margin-top: 20px;
-            padding: 18px;
-            background: #f1f1f1;
-            border-radius: 10px;
-            text-align: center;
-        }
+.total {
+    margin-top: 20px;
+    padding: 18px;
+    background: #f1f1f1;
+    border-radius: 10px;
+    text-align: center;
+}
 
-        .total-label {
-            font-size: 14px;
-            color: #666;
-        }
+.total-label {
+    font-size: 14px;
+    color: #666;
+}
 
-        .total-value {
-            font-size: 26px;
-            font-weight: bold;
-            margin-top: 5px;
-        }
+.total-value {
+    font-size: 26px;
+    font-weight: bold;
+    margin-top: 5px;
+}
 
-        .signature-section {
-            margin-top: 30px;
-        }
+.signature-section {
+    margin-top: 30px;
+}
 
-        .signature-title {
-            font-size: 17px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+.signature-title {
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
 
-        .signature-box {
-            border: 2px dashed #999;
-            border-radius: 10px;
-            background: #fff;
-            overflow: hidden;
-            width: 100%;
-        }
+.signature-box {
+    border: 2px dashed #999;
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
+}
 
-        #signatureCanvas {
-            display: block;
-            width: 100%;
-            height: 220px;
-            touch-action: none;
-            cursor: crosshair;
-        }
+#signatureCanvas {
+    display: block;
+    width: 100%;
+    height: 220px;
+    touch-action: none;
+}
 
-        .signature-note {
-            font-size: 13px;
-            color: #777;
-            margin-top: 8px;
-        }
+.signature-note {
+    font-size: 13px;
+    color: #777;
+    margin-top: 8px;
+}
 
-        .button-row {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 13px 18px;
+    font-size: 15px;
+    cursor: pointer;
+}
 
-        button {
-            border: none;
-            border-radius: 8px;
-            padding: 13px 18px;
-            font-size: 15px;
-            cursor: pointer;
-        }
+.clear-button {
+    background: #e5e5e5;
+    color: #333;
+    margin-top: 12px;
+}
 
-        .clear-button {
-            background: #e5e5e5;
-            color: #333;
-        }
+.submit-button {
+    width: 100%;
+    background: #333;
+    color: #fff;
+    margin-top: 15px;
+}
 
-        .submit-button {
-            flex: 1;
-            background: #333;
-            color: white;
-        }
+.agreement {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 20px;
+    font-size: 14px;
+    line-height: 1.5;
+}
 
-        .agreement {
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
-            margin-top: 20px;
-            font-size: 14px;
-            line-height: 1.5;
-        }
+.agreement input {
+    margin-top: 4px;
+    transform: scale(1.2);
+}
 
-        .agreement input {
-            margin-top: 4px;
-            transform: scale(1.2);
-        }
-
-        .error {
-            text-align: center;
-            color: #b00020;
-            padding: 25px;
-        }
-    </style>
+.error {
+    text-align: center;
+    color: #b00020;
+    padding: 25px;
+}
+</style>
 </head>
 
 <body>
@@ -171,6 +165,8 @@
     <div id="loading" class="loading">
         Memuat data gaji...
     </div>
+
+    <div id="error" class="error" style="display:none;"></div>
 
     <div id="data" style="display:none;">
 
@@ -226,10 +222,6 @@
             <div class="total-value" id="totalDiterima"></div>
         </div>
 
-        <!-- ==========================================
-             AREA TANDA TANGAN
-        =========================================== -->
-
         <div class="signature-section">
 
             <div class="signature-title">
@@ -244,16 +236,12 @@
                 Silakan tanda tangan menggunakan jari di dalam kotak.
             </div>
 
-            <div class="button-row">
-
-                <button
-                    type="button"
-                    class="clear-button"
-                    onclick="clearSignature()">
-                    Hapus
-                </button>
-
-            </div>
+            <button
+                type="button"
+                class="clear-button"
+                id="clearButton">
+                Hapus
+            </button>
 
             <label class="agreement">
 
@@ -271,94 +259,75 @@
             <button
                 type="button"
                 class="submit-button"
-                onclick="testSignature()"
-                style="width:100%; margin-top:15px;">
-                TEST TANDA TANGAN
+                id="submitButton">
+                KIRIM TANDA TERIMA
             </button>
 
         </div>
 
     </div>
 
-    <div id="error" class="error" style="display:none;"></div>
-
 </div>
-
 
 <script>
 
-    // ==========================================
-    // GOOGLE APPS SCRIPT
-    // ==========================================
+const API_URL =
+"https://script.google.com/macros/s/AKfycbxLgwrJ0BJ8KZJzzARkbL7FhIW_LsDQorI5Mbf02_ItydIhRgz6B_EopDA7ffflv77-/exec";
 
-    const API_URL =
-        "https://script.google.com/macros/s/AKfycbxLgwrJ0BJ8KZJzzARkbL7FhIW_LsDQorI5Mbf02_ItydIhRgz6B_EopDA7ffflv77-/exec";
+const token =
+new URLSearchParams(window.location.search).get("id");
 
+let employeeId = "";
 
-    // ==========================================
-    // TOKEN
-    // ==========================================
-
-    const params =
-        new URLSearchParams(window.location.search);
-
-    const token =
-        params.get("id");
-    let employeeId = "";
-    
-
-    // ==========================================
-    // FORMAT RUPIAH
-    // ==========================================
-
-    function formatRupiah(angka) {
-
-        return new Intl.NumberFormat("id-ID", {
-            style: "currency",
-            currency: "IDR",
-            maximumFractionDigits: 0
-        }).format(angka);
-
-    }
+let canvas = null;
+let ctx = null;
+let drawing = false;
+let hasSignature = false;
 
 
-    // ==========================================
-    // FORMAT PERIODE
-    // ==========================================
+// ==========================================
+// FORMAT RUPIAH
+// ==========================================
 
-    function formatPeriode(tanggal) {
+function formatRupiah(value) {
 
-        const date = new Date(tanggal);
+    return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        maximumFractionDigits: 0
+    }).format(Number(value) || 0);
 
-        return new Intl.DateTimeFormat("id-ID", {
-            month: "long",
-            year: "numeric",
-            timeZone: "Asia/Jakarta"
-        }).format(date);
-
-    }
+}
 
 
-  // ==========================================
-// AMBIL DATA GAJI
+// ==========================================
+// FORMAT PERIODE
+// ==========================================
+
+function formatPeriode(value) {
+
+    const date = new Date(value);
+
+    return new Intl.DateTimeFormat("id-ID", {
+        month: "long",
+        year: "numeric",
+        timeZone: "Asia/Jakarta"
+    }).format(date);
+
+}
+
+
+// ==========================================
+// LOAD DATA
 // ==========================================
 
 async function loadData() {
 
-    if (!token) {
-
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("error").style.display = "block";
-
-        document.getElementById("error").innerText =
-            "Token tanda terima tidak ditemukan.";
-
-        return;
-    }
-
     try {
 
-        console.log("Memuat data token:", token);
+        if (!token) {
+            throw new Error("Token tanda terima tidak ditemukan.");
+        }
 
         const response = await fetch(
             API_URL + "?id=" + encodeURIComponent(token)
@@ -370,8 +339,6 @@ async function loadData() {
 
         const result = await response.json();
 
-        console.log("Data diterima:", result);
-
         if (!result.success) {
             throw new Error(
                 result.message || "Data tidak ditemukan."
@@ -382,34 +349,34 @@ async function loadData() {
 
         employeeId = data.employeeId;
 
-        document.getElementById("nama").innerText =
+        document.getElementById("nama").textContent =
             data.nama;
 
-        document.getElementById("nik").innerText =
+        document.getElementById("nik").textContent =
             data.nik;
 
-        document.getElementById("jabatan").innerText =
+        document.getElementById("jabatan").textContent =
             data.jabatan;
 
-        document.getElementById("periode").innerText =
+        document.getElementById("periode").textContent =
             formatPeriode(data.periode);
 
-        document.getElementById("gajiPokok").innerText =
+        document.getElementById("gajiPokok").textContent =
             formatRupiah(data.gajiPokok);
 
-        document.getElementById("tunjangan").innerText =
+        document.getElementById("tunjangan").textContent =
             formatRupiah(data.tunjangan);
 
-        document.getElementById("lembur").innerText =
+        document.getElementById("lembur").textContent =
             formatRupiah(data.lembur);
 
-        document.getElementById("bonus").innerText =
+        document.getElementById("bonus").textContent =
             formatRupiah(data.bonus);
 
-        document.getElementById("potongan").innerText =
+        document.getElementById("potongan").textContent =
             formatRupiah(data.potongan);
 
-        document.getElementById("totalDiterima").innerText =
+        document.getElementById("totalDiterima").textContent =
             formatRupiah(data.totalDiterima);
 
         document.getElementById("loading").style.display =
@@ -422,15 +389,13 @@ async function loadData() {
 
     } catch (error) {
 
-        console.error("ERROR:", error);
-
         document.getElementById("loading").style.display =
             "none";
 
         document.getElementById("error").style.display =
             "block";
 
-        document.getElementById("error").innerText =
+        document.getElementById("error").textContent =
             error.message;
 
     }
@@ -438,231 +403,192 @@ async function loadData() {
 }
 
 
-// Jalankan saat halaman selesai dimuat
-window.addEventListener("DOMContentLoaded", loadData);
+// ==========================================
+// CANVAS
+// ==========================================
 
-    // ==========================================
-    // CANVAS TANDA TANGAN
-    // ==========================================
+function setupCanvas() {
 
-    let canvas;
-    let ctx;
-    let drawing = false;
+    canvas =
+        document.getElementById("signatureCanvas");
 
+    ctx =
+        canvas.getContext("2d");
 
-    function setupCanvas() {
+    resizeCanvas();
 
-        canvas =
-            document.getElementById("signatureCanvas");
+    canvas.addEventListener(
+        "pointerdown",
+        startDrawing
+    );
 
-        ctx =
-            canvas.getContext("2d");
+    canvas.addEventListener(
+        "pointermove",
+        draw
+    );
 
-        resizeCanvas();
+    canvas.addEventListener(
+        "pointerup",
+        stopDrawing
+    );
 
-        window.addEventListener(
-            "resize",
-            resizeCanvas
-        );
+    canvas.addEventListener(
+        "pointercancel",
+        stopDrawing
+    );
 
+    canvas.addEventListener(
+        "pointerleave",
+        stopDrawing
+    );
 
-        // Mouse / komputer
-        canvas.addEventListener(
-            "mousedown",
-            startDrawing
-        );
-
-        canvas.addEventListener(
-            "mousemove",
-            draw
-        );
-
-        canvas.addEventListener(
-            "mouseup",
-            stopDrawing
-        );
-
-        canvas.addEventListener(
-            "mouseleave",
-            stopDrawing
-        );
+}
 
 
-        // HP / touchscreen
-        canvas.addEventListener(
-            "touchstart",
-            startDrawing,
-            { passive: false }
-        );
+// ==========================================
+// RESIZE CANVAS
+// ==========================================
 
-        canvas.addEventListener(
-            "touchmove",
-            draw,
-            { passive: false }
-        );
+function resizeCanvas() {
 
-        canvas.addEventListener(
-            "touchend",
-            stopDrawing,
-            { passive: false }
-        );
+    if (!canvas) return;
 
-    }
+    const rect =
+        canvas.getBoundingClientRect();
 
+    const ratio =
+        window.devicePixelRatio || 1;
 
-    function resizeCanvas() {
+    canvas.width =
+        rect.width * ratio;
 
-        if (!canvas) return;
+    canvas.height =
+        rect.height * ratio;
 
-        const rect =
-            canvas.getBoundingClientRect();
+    ctx.setTransform(
+        ratio,
+        0,
+        0,
+        ratio,
+        0,
+        0
+    );
 
-        const oldImage =
-            canvas.width > 0 && canvas.height > 0
-            ? canvas.toDataURL()
-            : null;
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
 
-        canvas.width =
-            rect.width * window.devicePixelRatio;
-
-        canvas.height =
-            rect.height * window.devicePixelRatio;
-
-        ctx.scale(
-            window.devicePixelRatio,
-            window.devicePixelRatio
-        );
-
-        ctx.lineWidth = 2;
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
-
-    }
+}
 
 
-    function getPosition(event) {
+// ==========================================
+// POSISI POINTER
+// ==========================================
 
-        const rect =
-            canvas.getBoundingClientRect();
+function getPosition(event) {
 
-        if (event.touches && event.touches.length > 0) {
+    const rect =
+        canvas.getBoundingClientRect();
 
-            return {
-                x: event.touches[0].clientX - rect.left,
-                y: event.touches[0].clientY - rect.top
-            };
+    return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+    };
 
-        }
-
-        return {
-            x: event.clientX - rect.left,
-            y: event.clientY - rect.top
-        };
-
-    }
+}
 
 
-    function startDrawing(event) {
+// ==========================================
+// MULAI TANDA TANGAN
+// ==========================================
 
+function startDrawing(event) {
+
+    event.preventDefault();
+
+    drawing = true;
+    hasSignature = true;
+
+    const pos =
+        getPosition(event);
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        pos.x,
+        pos.y
+    );
+
+}
+
+
+// ==========================================
+// GAMBAR
+// ==========================================
+
+function draw(event) {
+
+    if (!drawing) return;
+
+    event.preventDefault();
+
+    const pos =
+        getPosition(event);
+
+    ctx.lineTo(
+        pos.x,
+        pos.y
+    );
+
+    ctx.stroke();
+
+}
+
+
+// ==========================================
+// SELESAI
+// ==========================================
+
+function stopDrawing(event) {
+
+    if (event) {
         event.preventDefault();
-
-        drawing = true;
-
-        const pos =
-            getPosition(event);
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            pos.x,
-            pos.y
-        );
-
     }
 
+    drawing = false;
 
-    function draw(event) {
-
-        if (!drawing) return;
-
-        event.preventDefault();
-
-        const pos =
-            getPosition(event);
-
-        ctx.lineTo(
-            pos.x,
-            pos.y
-        );
-
-        ctx.stroke();
-
-    }
+}
 
 
-    function stopDrawing(event) {
+// ==========================================
+// HAPUS
+// ==========================================
 
-        if (event) {
-            event.preventDefault();
-        }
+document.getElementById("clearButton")
+.addEventListener("click", function() {
 
-        drawing = false;
+    if (!canvas || !ctx) return;
 
-    }
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
+    hasSignature = false;
 
-    // ==========================================
-    // HAPUS TANDA TANGAN
-    // ==========================================
-
-    function clearSignature() {
-
-        if (!canvas || !ctx) return;
-
-        ctx.clearRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
-
-    }
+});
 
 
-    // ==========================================
-    // TEST SAJA
-    // ==========================================
+// ==========================================
+// KIRIM TANDA TANGAN
+// ==========================================
 
-  async function testSignature() {
+document.getElementById("submitButton")
+.addEventListener("click", async function() {
 
-    if (!canvas) {
-        alert("Canvas belum siap.");
-        return;
-    }
-
-    const agreement =
-        document.getElementById("agreement").checked;
-
-    if (!agreement) {
-
-        alert(
-            "Silakan centang pernyataan penerimaan gaji terlebih dahulu."
-        );
-
-        return;
-    }
-
-    // Cek apakah ada tanda tangan
-    const blankCanvas =
-        document.createElement("canvas");
-
-    blankCanvas.width = canvas.width;
-    blankCanvas.height = canvas.height;
-
-    if (
-        canvas.toDataURL() ===
-        blankCanvas.toDataURL()
-    ) {
+    if (!hasSignature) {
 
         alert(
             "Silakan tanda tangan terlebih dahulu."
@@ -671,8 +597,26 @@ window.addEventListener("DOMContentLoaded", loadData);
         return;
     }
 
+    if (
+        !document.getElementById("agreement").checked
+    ) {
+
+        alert(
+            "Silakan centang pernyataan penerimaan gaji."
+        );
+
+        return;
+    }
+
     const signature =
         canvas.toDataURL("image/png");
+
+    const button = this;
+
+    button.disabled = true;
+
+    button.textContent =
+        "Menyimpan...";
 
     try {
 
@@ -680,13 +624,20 @@ window.addEventListener("DOMContentLoaded", loadData);
             API_URL,
             {
                 method: "POST",
+
                 headers: {
-                    "Content-Type": "text/plain;charset=utf-8"
+                    "Content-Type":
+                        "text/plain;charset=utf-8"
                 },
+
                 body: JSON.stringify({
+
                     token: token,
+
                     employeeId: employeeId,
+
                     signature: signature
+
                 })
             }
         );
@@ -698,16 +649,24 @@ window.addEventListener("DOMContentLoaded", loadData);
 
             throw new Error(
                 result.message ||
-                "Gagal menyimpan tanda tangan."
+                "Tanda tangan gagal disimpan."
             );
 
         }
 
         alert(
-            "Tanda tangan berhasil disimpan ke Google Drive."
+            "Tanda tangan berhasil disimpan."
         );
 
+        button.textContent =
+            "TERKIRIM ✓";
+
     } catch (error) {
+
+        button.disabled = false;
+
+        button.textContent =
+            "KIRIM TANDA TERIMA";
 
         alert(
             "Gagal menyimpan tanda tangan:\n\n" +
@@ -716,4 +675,16 @@ window.addEventListener("DOMContentLoaded", loadData);
 
     }
 
-}
+});
+
+
+// ==========================================
+// JALANKAN
+// ==========================================
+
+loadData();
+
+</script>
+
+</body>
+</html>
