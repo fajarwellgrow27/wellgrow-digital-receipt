@@ -342,7 +342,9 @@
     // ==========================================
     // AMBIL DATA
     // ==========================================
-
+console.log("TOKEN TERBACA:", token);
+console.log("API URL:", API_URL);
+    
     if (!token) {
 
         document.getElementById("loading").style.display = "none";
@@ -354,6 +356,8 @@
 
     } else {
 
+console.log("AKAN MEMANGGIL APPS SCRIPT");
+        
         fetch(
             API_URL +
             "?id=" +
