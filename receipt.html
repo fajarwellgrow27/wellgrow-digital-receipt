@@ -304,7 +304,8 @@
 
     const token =
         params.get("id");
-
+    let employeeId = "";
+    
 
     // ==========================================
     // FORMAT RUPIAH
@@ -383,7 +384,8 @@
             }
 
             const data = result.data;
-
+            employeeId = data.employeeId;
+            
 
             document.getElementById("nama").innerText =
                 data.nama;
@@ -636,33 +638,87 @@
     // TEST SAJA
     // ==========================================
 
-    function testSignature() {
+  async function testSignature() {
 
-        if (!canvas) {
-            alert("Canvas belum siap.");
-            return;
-        }
+    if (!canvas) {
+        alert("Canvas belum siap.");
+        return;
+    }
 
-        const agreement =
-            document.getElementById("agreement").checked;
+    const agreement =
+        document.getElementById("agreement").checked;
 
-        if (!agreement) {
+    if (!agreement) {
 
-            alert(
-                "Silakan centang pernyataan penerimaan gaji terlebih dahulu."
+        alert(
+            "Silakan centang pernyataan penerimaan gaji terlebih dahulu."
+        );
+
+        return;
+    }
+
+    // Cek apakah ada tanda tangan
+    const blankCanvas =
+        document.createElement("canvas");
+
+    blankCanvas.width = canvas.width;
+    blankCanvas.height = canvas.height;
+
+    if (
+        canvas.toDataURL() ===
+        blankCanvas.toDataURL()
+    ) {
+
+        alert(
+            "Silakan tanda tangan terlebih dahulu."
+        );
+
+        return;
+    }
+
+    const signature =
+        canvas.toDataURL("image/png");
+
+    try {
+
+        const response = await fetch(
+            API_URL,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "text/plain;charset=utf-8"
+                },
+                body: JSON.stringify({
+                    token: token,
+                    employeeId: employeeId,
+                    signature: signature
+                })
+            }
+        );
+
+        const result =
+            await response.json();
+
+        if (!result.success) {
+
+            throw new Error(
+                result.message ||
+                "Gagal menyimpan tanda tangan."
             );
 
-            return;
         }
 
         alert(
-            "Tanda tangan berhasil dibaca oleh halaman.\n\n" +
-            "Untuk tahap ini BELUM disimpan ke Google Drive."
+            "Tanda tangan berhasil disimpan ke Google Drive."
+        );
+
+    } catch (error) {
+
+        alert(
+            "Gagal menyimpan tanda tangan:\n\n" +
+            error.message
         );
 
     }
 
-</script>
-
-</body>
-</html>
+}
