@@ -47,6 +47,7 @@
         .data-row {
             display: flex;
             justify-content: space-between;
+            gap: 15px;
             padding: 10px 0;
             border-bottom: 1px solid #eee;
         }
@@ -77,6 +78,77 @@
             font-size: 26px;
             font-weight: bold;
             margin-top: 5px;
+        }
+
+        .signature-section {
+            margin-top: 30px;
+        }
+
+        .signature-title {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .signature-box {
+            border: 2px dashed #999;
+            border-radius: 10px;
+            background: #fff;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        #signatureCanvas {
+            display: block;
+            width: 100%;
+            height: 220px;
+            touch-action: none;
+            cursor: crosshair;
+        }
+
+        .signature-note {
+            font-size: 13px;
+            color: #777;
+            margin-top: 8px;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            border: none;
+            border-radius: 8px;
+            padding: 13px 18px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .clear-button {
+            background: #e5e5e5;
+            color: #333;
+        }
+
+        .submit-button {
+            flex: 1;
+            background: #333;
+            color: white;
+        }
+
+        .agreement {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .agreement input {
+            margin-top: 4px;
+            transform: scale(1.2);
         }
 
         .error {
@@ -154,16 +226,69 @@
             <div class="total-value" id="totalDiterima"></div>
         </div>
 
+        <!-- ==========================================
+             AREA TANDA TANGAN
+        =========================================== -->
+
+        <div class="signature-section">
+
+            <div class="signature-title">
+                Tanda Tangan Karyawan
+            </div>
+
+            <div class="signature-box">
+                <canvas id="signatureCanvas"></canvas>
+            </div>
+
+            <div class="signature-note">
+                Silakan tanda tangan menggunakan jari di dalam kotak.
+            </div>
+
+            <div class="button-row">
+
+                <button
+                    type="button"
+                    class="clear-button"
+                    onclick="clearSignature()">
+                    Hapus
+                </button>
+
+            </div>
+
+            <label class="agreement">
+
+                <input
+                    type="checkbox"
+                    id="agreement">
+
+                <span>
+                    Saya menyatakan telah menerima gaji sesuai
+                    dengan rincian yang tercantum di atas.
+                </span>
+
+            </label>
+
+            <button
+                type="button"
+                class="submit-button"
+                onclick="testSignature()"
+                style="width:100%; margin-top:15px;">
+                TEST TANDA TANGAN
+            </button>
+
+        </div>
+
     </div>
 
     <div id="error" class="error" style="display:none;"></div>
 
 </div>
 
+
 <script>
 
     // ==========================================
-    // URL GOOGLE APPS SCRIPT
+    // GOOGLE APPS SCRIPT
     // ==========================================
 
     const API_URL =
@@ -171,12 +296,14 @@
 
 
     // ==========================================
-    // AMBIL TOKEN DARI URL
+    // TOKEN
     // ==========================================
 
-    const params = new URLSearchParams(window.location.search);
+    const params =
+        new URLSearchParams(window.location.search);
 
-    const token = params.get("id");
+    const token =
+        params.get("id");
 
 
     // ==========================================
@@ -212,7 +339,7 @@
 
 
     // ==========================================
-    // VALIDASI TOKEN
+    // AMBIL DATA
     // ==========================================
 
     if (!token) {
@@ -226,94 +353,312 @@
 
     } else {
 
-        // ==========================================
-        // AMBIL DATA DARI APPS SCRIPT
-        // ==========================================
+        fetch(
+            API_URL +
+            "?id=" +
+            encodeURIComponent(token)
+        )
 
-        fetch(API_URL + "?id=" + encodeURIComponent(token))
+        .then(response => {
 
-            .then(response => {
+            if (!response.ok) {
+                throw new Error(
+                    "Gagal menghubungi server."
+                );
+            }
 
-                if (!response.ok) {
-                    throw new Error("Gagal menghubungi server.");
-                }
+            return response.json();
 
-                return response.json();
+        })
 
-            })
+        .then(result => {
 
-            .then(result => {
+            if (!result.success) {
 
-                if (!result.success) {
+                throw new Error(
+                    result.message ||
+                    "Data tidak ditemukan."
+                );
 
-                    throw new Error(
-                        result.message || "Data tidak ditemukan."
-                    );
+            }
 
-                }
-
-                const data = result.data;
-
-
-                // ==========================================
-                // TAMPILKAN DATA
-                // ==========================================
-
-                document.getElementById("nama").innerText =
-                    data.nama;
-
-                document.getElementById("nik").innerText =
-                    data.nik;
-
-                document.getElementById("jabatan").innerText =
-                    data.jabatan;
-
-                document.getElementById("periode").innerText =
-                    formatPeriode(data.periode);
-
-                document.getElementById("gajiPokok").innerText =
-                    formatRupiah(data.gajiPokok);
-
-                document.getElementById("tunjangan").innerText =
-                    formatRupiah(data.tunjangan);
-
-                document.getElementById("lembur").innerText =
-                    formatRupiah(data.lembur);
-
-                document.getElementById("bonus").innerText =
-                    formatRupiah(data.bonus);
-
-                document.getElementById("potongan").innerText =
-                    formatRupiah(data.potongan);
-
-                document.getElementById("totalDiterima").innerText =
-                    formatRupiah(data.totalDiterima);
+            const data = result.data;
 
 
-                // ==========================================
-                // TAMPILKAN AREA DATA
-                // ==========================================
+            document.getElementById("nama").innerText =
+                data.nama;
 
-                document.getElementById("loading").style.display =
-                    "none";
+            document.getElementById("nik").innerText =
+                data.nik;
 
-                document.getElementById("data").style.display =
-                    "block";
+            document.getElementById("jabatan").innerText =
+                data.jabatan;
 
-            })
+            document.getElementById("periode").innerText =
+                formatPeriode(data.periode);
 
-            .catch(error => {
+            document.getElementById("gajiPokok").innerText =
+                formatRupiah(data.gajiPokok);
 
-                document.getElementById("loading").style.display =
-                    "none";
+            document.getElementById("tunjangan").innerText =
+                formatRupiah(data.tunjangan);
 
-                document.getElementById("error").style.display =
-                    "block";
+            document.getElementById("lembur").innerText =
+                formatRupiah(data.lembur);
 
-                document.getElementById("error").innerText =
-                    error.message;
+            document.getElementById("bonus").innerText =
+                formatRupiah(data.bonus);
 
-            });
+            document.getElementById("potongan").innerText =
+                formatRupiah(data.potongan);
+
+            document.getElementById("totalDiterima").innerText =
+                formatRupiah(data.totalDiterima);
+
+
+            document.getElementById("loading").style.display =
+                "none";
+
+            document.getElementById("data").style.display =
+                "block";
+
+
+            // Siapkan canvas setelah data tampil
+            setupCanvas();
+
+        })
+
+        .catch(error => {
+
+            document.getElementById("loading").style.display =
+                "none";
+
+            document.getElementById("error").style.display =
+                "block";
+
+            document.getElementById("error").innerText =
+                error.message;
+
+        });
+
+    }
+
+
+    // ==========================================
+    // CANVAS TANDA TANGAN
+    // ==========================================
+
+    let canvas;
+    let ctx;
+    let drawing = false;
+
+
+    function setupCanvas() {
+
+        canvas =
+            document.getElementById("signatureCanvas");
+
+        ctx =
+            canvas.getContext("2d");
+
+        resizeCanvas();
+
+        window.addEventListener(
+            "resize",
+            resizeCanvas
+        );
+
+
+        // Mouse / komputer
+        canvas.addEventListener(
+            "mousedown",
+            startDrawing
+        );
+
+        canvas.addEventListener(
+            "mousemove",
+            draw
+        );
+
+        canvas.addEventListener(
+            "mouseup",
+            stopDrawing
+        );
+
+        canvas.addEventListener(
+            "mouseleave",
+            stopDrawing
+        );
+
+
+        // HP / touchscreen
+        canvas.addEventListener(
+            "touchstart",
+            startDrawing,
+            { passive: false }
+        );
+
+        canvas.addEventListener(
+            "touchmove",
+            draw,
+            { passive: false }
+        );
+
+        canvas.addEventListener(
+            "touchend",
+            stopDrawing,
+            { passive: false }
+        );
+
+    }
+
+
+    function resizeCanvas() {
+
+        if (!canvas) return;
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+        const oldImage =
+            canvas.width > 0 && canvas.height > 0
+            ? canvas.toDataURL()
+            : null;
+
+        canvas.width =
+            rect.width * window.devicePixelRatio;
+
+        canvas.height =
+            rect.height * window.devicePixelRatio;
+
+        ctx.scale(
+            window.devicePixelRatio,
+            window.devicePixelRatio
+        );
+
+        ctx.lineWidth = 2;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+
+    }
+
+
+    function getPosition(event) {
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+        if (event.touches && event.touches.length > 0) {
+
+            return {
+                x: event.touches[0].clientX - rect.left,
+                y: event.touches[0].clientY - rect.top
+            };
+
+        }
+
+        return {
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top
+        };
+
+    }
+
+
+    function startDrawing(event) {
+
+        event.preventDefault();
+
+        drawing = true;
+
+        const pos =
+            getPosition(event);
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            pos.x,
+            pos.y
+        );
+
+    }
+
+
+    function draw(event) {
+
+        if (!drawing) return;
+
+        event.preventDefault();
+
+        const pos =
+            getPosition(event);
+
+        ctx.lineTo(
+            pos.x,
+            pos.y
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    function stopDrawing(event) {
+
+        if (event) {
+            event.preventDefault();
+        }
+
+        drawing = false;
+
+    }
+
+
+    // ==========================================
+    // HAPUS TANDA TANGAN
+    // ==========================================
+
+    function clearSignature() {
+
+        if (!canvas || !ctx) return;
+
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+    }
+
+
+    // ==========================================
+    // TEST SAJA
+    // ==========================================
+
+    function testSignature() {
+
+        if (!canvas) {
+            alert("Canvas belum siap.");
+            return;
+        }
+
+        const agreement =
+            document.getElementById("agreement").checked;
+
+        if (!agreement) {
+
+            alert(
+                "Silakan centang pernyataan penerimaan gaji terlebih dahulu."
+            );
+
+            return;
+        }
+
+        alert(
+            "Tanda tangan berhasil dibaca oleh halaman.\n\n" +
+            "Untuk tahap ini BELUM disimpan ke Google Drive."
+        );
 
     }
 
