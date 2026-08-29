@@ -339,116 +339,107 @@
     }
 
 
-    // ==========================================
-    // AMBIL DATA
-    // ==========================================
-console.log("TOKEN TERBACA:", token);
-console.log("API URL:", API_URL);
-    
+  // ==========================================
+// AMBIL DATA GAJI
+// ==========================================
+
+async function loadData() {
+
     if (!token) {
 
         document.getElementById("loading").style.display = "none";
-
         document.getElementById("error").style.display = "block";
 
         document.getElementById("error").innerText =
             "Token tanda terima tidak ditemukan.";
 
-    } else {
+        return;
+    }
 
-console.log("AKAN MEMANGGIL APPS SCRIPT");
-        
-        fetch(
-            API_URL +
-            "?id=" +
-            encodeURIComponent(token)
-        )
+    try {
 
-        .then(response => {
+        console.log("Memuat data token:", token);
 
-            if (!response.ok) {
-                throw new Error(
-                    "Gagal menghubungi server."
-                );
-            }
+        const response = await fetch(
+            API_URL + "?id=" + encodeURIComponent(token)
+        );
 
-            return response.json();
+        if (!response.ok) {
+            throw new Error("Gagal menghubungi server.");
+        }
 
-        })
+        const result = await response.json();
 
-        .then(result => {
+        console.log("Data diterima:", result);
 
-            if (!result.success) {
+        if (!result.success) {
+            throw new Error(
+                result.message || "Data tidak ditemukan."
+            );
+        }
 
-                throw new Error(
-                    result.message ||
-                    "Data tidak ditemukan."
-                );
+        const data = result.data;
 
-            }
+        employeeId = data.employeeId;
 
-            const data = result.data;
-            employeeId = data.employeeId;
-            
+        document.getElementById("nama").innerText =
+            data.nama;
 
-            document.getElementById("nama").innerText =
-                data.nama;
+        document.getElementById("nik").innerText =
+            data.nik;
 
-            document.getElementById("nik").innerText =
-                data.nik;
+        document.getElementById("jabatan").innerText =
+            data.jabatan;
 
-            document.getElementById("jabatan").innerText =
-                data.jabatan;
+        document.getElementById("periode").innerText =
+            formatPeriode(data.periode);
 
-            document.getElementById("periode").innerText =
-                formatPeriode(data.periode);
+        document.getElementById("gajiPokok").innerText =
+            formatRupiah(data.gajiPokok);
 
-            document.getElementById("gajiPokok").innerText =
-                formatRupiah(data.gajiPokok);
+        document.getElementById("tunjangan").innerText =
+            formatRupiah(data.tunjangan);
 
-            document.getElementById("tunjangan").innerText =
-                formatRupiah(data.tunjangan);
+        document.getElementById("lembur").innerText =
+            formatRupiah(data.lembur);
 
-            document.getElementById("lembur").innerText =
-                formatRupiah(data.lembur);
+        document.getElementById("bonus").innerText =
+            formatRupiah(data.bonus);
 
-            document.getElementById("bonus").innerText =
-                formatRupiah(data.bonus);
+        document.getElementById("potongan").innerText =
+            formatRupiah(data.potongan);
 
-            document.getElementById("potongan").innerText =
-                formatRupiah(data.potongan);
+        document.getElementById("totalDiterima").innerText =
+            formatRupiah(data.totalDiterima);
 
-            document.getElementById("totalDiterima").innerText =
-                formatRupiah(data.totalDiterima);
+        document.getElementById("loading").style.display =
+            "none";
 
+        document.getElementById("data").style.display =
+            "block";
 
-            document.getElementById("loading").style.display =
-                "none";
+        setupCanvas();
 
-            document.getElementById("data").style.display =
-                "block";
+    } catch (error) {
 
+        console.error("ERROR:", error);
 
-            // Siapkan canvas setelah data tampil
-            setupCanvas();
+        document.getElementById("loading").style.display =
+            "none";
 
-        })
+        document.getElementById("error").style.display =
+            "block";
 
-        .catch(error => {
-
-            document.getElementById("loading").style.display =
-                "none";
-
-            document.getElementById("error").style.display =
-                "block";
-
-            document.getElementById("error").innerText =
-                error.message;
-
-        });
+        document.getElementById("error").innerText =
+            error.message;
 
     }
 
+}
+
+
+// Jalankan saat halaman selesai dimuat
+window.addEventListener("DOMContentLoaded", loadData);
 
     // ==========================================
     // CANVAS TANDA TANGAN
